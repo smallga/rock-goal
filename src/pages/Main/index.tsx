@@ -67,6 +67,7 @@ class Main extends Component<any, any> {
     userAccount.push({ name: 'KAI B', ..._.cloneDeep(initAccountRouterGoal) });
     userAccount.push({ name: '孫蝸', ..._.cloneDeep(initAccountRouterGoal) });
     userAccount.push({ name: 'Yolin', ..._.cloneDeep(initAccountRouterGoal) });
+    userAccount.push({ name: 'ED', ..._.cloneDeep(initAccountRouterGoal) });
     this.setState({ userAccount: userAccount })
     this.setState({ initAccountRouterGoal: initAccountRouterGoal })
   }
