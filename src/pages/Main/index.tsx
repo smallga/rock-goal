@@ -58,15 +58,15 @@ class Main extends Component<any, any> {
     for (let i = 0; i < routerCount; i++) {
       initRouterGoalModel.push({ number: i + 1, status: routerGoalStatusEnum.NONE })
     }
-    let initAccountRouterGoal: userAccountModel = { routerGoal: initRouterGoalModel, topCount: 0, zone2Count: 0, zone1Count: 0, zone1Att: 0, zone2Att: 0, startAtt: 0 }
+    let initAccountRouterGoal: userAccountModel = { routerGoal: _.cloneDeep(initRouterGoalModel), topCount: 0, zone2Count: 0, zone1Count: 0, zone1Att: 0, zone2Att: 0, startAtt: 0 }
     let userAccount: userAccountModel[] = [];
-    userAccount.push({ name: '百八', ...initAccountRouterGoal });
-    userAccount.push({ name: '史蛋', ...initAccountRouterGoal });
-    userAccount.push({ name: '米踢', ...initAccountRouterGoal });
-    userAccount.push({ name: '胡真', ...initAccountRouterGoal });
-    userAccount.push({ name: 'KAI B', ...initAccountRouterGoal });
-    userAccount.push({ name: '孫蝸', ...initAccountRouterGoal });
-    userAccount.push({ name: 'Yolin', ...initAccountRouterGoal });
+    userAccount.push({ name: '百八', ..._.cloneDeep(initAccountRouterGoal) });
+    userAccount.push({ name: '史蛋', ..._.cloneDeep(initAccountRouterGoal) });
+    userAccount.push({ name: '米踢', ..._.cloneDeep(initAccountRouterGoal) });
+    userAccount.push({ name: '胡真', ..._.cloneDeep(initAccountRouterGoal) });
+    userAccount.push({ name: 'KAI B', ..._.cloneDeep(initAccountRouterGoal) });
+    userAccount.push({ name: '孫蝸', ..._.cloneDeep(initAccountRouterGoal) });
+    userAccount.push({ name: 'Yolin', ..._.cloneDeep(initAccountRouterGoal) });
     this.setState({ userAccount: userAccount })
     this.setState({ initAccountRouterGoal: initAccountRouterGoal })
   }
@@ -152,14 +152,16 @@ class Main extends Component<any, any> {
       console.log(findAccount);
       console.log(userAccount);
       this.setState({ userAccount: userAccount });
-
-      alert('成功');
+      this.setWhoWin();
+      // alert('成功');
     }
   }
 
   //計算是誰贏
   setWhoWin() {
     const { userAccount } = this.state
+    let orderAccount = _.orderBy(userAccount, ['topCount', 'zone2Count', 'zone1Count'], ['desc', 'desc', 'desc'])
+    this.setState({ userAccount: orderAccount });
   }
 
   render() {
