@@ -9,6 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import blueGrey from '@material-ui/core/colors/blueGrey';
+import { routerGoalModel, routerGoalStatusEnum, userAccountModel } from '../Main';
 
 const blueGreycolor = blueGrey[800]
 
@@ -53,36 +54,21 @@ class OptionStartGoal extends Component<any, any> {
 
   // 初始化所有選手的路線資訊
   initRouterGoal() {
-    const { routerCount } = this.state
+    let routeInfos = JSON.parse(sessionStorage.getItem('routerInfos') || '{}')
+    let routerGoalAccounts =  JSON.parse(sessionStorage.getItem('routerGoalAccounts') || '{}')
+    console.log('routeInfos', routeInfos);
     let initRouterGoalModel: routerGoalModel[] = [];
-    for (let i = 0; i < routerCount; i++) {
-      initRouterGoalModel.push({ number: i + 1, status: routerGoalStatusEnum.NONE })
-    }
-    let initAccountRouterGoal: userAccountModel = { routerGoal: _.cloneDeep(initRouterGoalModel), topCount: 0, zone2Count: 0, zone1Count: 0, zone1Att: 0, zone2Att: 0, startAtt: 0 }
-    let userAccount: userAccountModel[] = [];
-    userAccount.push({ name: '百八', ..._.cloneDeep(initAccountRouterGoal) });
-    userAccount.push({ name: '史蛋', ..._.cloneDeep(initAccountRouterGoal) });
-    userAccount.push({ name: '米踢', ..._.cloneDeep(initAccountRouterGoal) });
-    userAccount.push({ name: '胡真', ..._.cloneDeep(initAccountRouterGoal) });
-    userAccount.push({ name: 'KAI B', ..._.cloneDeep(initAccountRouterGoal) });
-    userAccount.push({ name: '孫蝸', ..._.cloneDeep(initAccountRouterGoal) });
-    userAccount.push({ name: 'Yolin', ..._.cloneDeep(initAccountRouterGoal) });
-    userAccount.push({ name: 'ED', ..._.cloneDeep(initAccountRouterGoal) });
-    this.setState({ userAccount: userAccount })
-    this.setState({ initAccountRouterGoal: initAccountRouterGoal })
-  }
+    _.each(routeInfos, (routeInfo, index) => { 
+      initRouterGoalModel.push({ number: Number(index) + 1, name: `V${routeInfo.level} ${routeInfo.color}`, status: routerGoalStatusEnum.NONE })}
+    )
 
-  initUserAccount() {
-    const { initAccountRouterGoal } = this.state;
-    let userAccount: userAccountModel[] = [];
-    userAccount.push({ name: '百八', ...initAccountRouterGoal });
-    userAccount.push({ name: '史蛋', ...initAccountRouterGoal });
-    userAccount.push({ name: '米踢', ...initAccountRouterGoal });
-    userAccount.push({ name: '胡真', ...initAccountRouterGoal });
-    userAccount.push({ name: 'KAI B', ...initAccountRouterGoal });
-    userAccount.push({ name: '孫蝸', ...initAccountRouterGoal });
-    userAccount.push({ name: 'Yolin', ...initAccountRouterGoal });
-    this.setState({ userAccount: userAccount })
+    console.log('initRouterGoalModel', initRouterGoalModel);
+    this.setState({userAccount: _.map(routerGoalAccounts, account => ({
+      ...account,
+      routerGoal: _.cloneDeep(initRouterGoalModel)
+    })),
+    initAccountRouterGoal: initRouterGoalModel
+  })
   }
 
   //切換 focusID 讓畫面Focus 當前 focusUnitId 的單位
@@ -167,7 +153,7 @@ class OptionStartGoal extends Component<any, any> {
 
   render() {
     const { classes } = this.props;
-    const { userAccount, selectName, routerCount, selectRouterNum, selectRouterStatus } = this.state
+    const { userAccount, selectName, routerCount, selectRouterNum, selectRouterStatus, initAccountRouterGoal } = this.state
     return (
       <div>
         <div>
@@ -197,8 +183,8 @@ class OptionStartGoal extends Component<any, any> {
               onChange={this.handleRouterNumChange}
             >
               {
-                _.map(_.range(1, routerCount + 1), number => (
-                  <MenuItem value={number}>路線{number}</MenuItem>
+                _.map(initAccountRouterGoal, route => (
+                  <MenuItem value={route.number}>{route.name}</MenuItem>
                 ))
               }
             </Select>
@@ -255,28 +241,3 @@ class OptionStartGoal extends Component<any, any> {
 }
 
 export default withStyles(useStyles)(OptionStartGoal)
-
-export interface userAccountModel {
-  name?: string;
-  routerGoal?: routerGoalModel[];
-  topCount: number;
-  zone2Count: number;
-  zone1Count: number;
-  zone1Att: number;
-  zone2Att: number;
-  startAtt: number; //總攀爬次數
-}
-
-export interface routerGoalModel {
-  number: number;
-  name?: string;
-  status: routerGoalStatusEnum;
-}
-
-export enum routerGoalStatusEnum {
-  TOP = '4',
-  ZONE_2 = '3',
-  ZONE_1 = '2',
-  FAIL = '0',
-  NONE = '1',
-}

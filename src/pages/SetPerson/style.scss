@@ -1,0 +1,32 @@
+.rock-person {
+  &__list {
+    display: flex;
+    flex-direction: column-reverse;
+    & div {
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & div {
+      margin-right: 5px;
+    }
+  }
+
+  &__new-person {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem !important;
+    &__input {
+      background-color: aliceblue;
+      border-radius: 4px;
+      min-width: 80px;
+      width: 180px;
+      margin-right: 0.5rem !important;
+    }
+  }
+}
